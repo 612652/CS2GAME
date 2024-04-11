@@ -1,15 +1,19 @@
-# Example file showing a basic pygame "game loop"
-import pygame
-import os.path
 from sys import exit
+
+scriptDir = os.path.dirname(os.path.abspath(__file__))
 
 def main():
     # pygame setup
     pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
+    screen = pygame.display.set_mode((1200, 720))
     clock = pygame.time.Clock()
     
-
+    #Surfaces for ground and sky
+    skySurface = pygame.image.load(os.path.join(scriptDir,"graphics","sky.png")).convert()
+    scale2x
+    groundSurface = pygame.image.load(os.path.join(scriptDir,"graphics","grass2.png")).convert()
+    
+    
     while True:
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
@@ -17,9 +21,11 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-
+                
+        
+        screen.blit(skySurface,(0,0))
+        screen.blit(groundSurface,(0,300))
     # fill the screen with a color to wipe away anything from last frame
-        screen.fill("purple")
 
     # RENDER YOUR GAME HERE
 
@@ -27,9 +33,6 @@ def main():
         pygame.display.flip()
 
         clock.tick(60)  # limits FPS to 60
-
-
-
 
 if __name__ == "__main__":
     main()
