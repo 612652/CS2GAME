@@ -1,3 +1,6 @@
+# Example file showing a basic pygame "game loop"
+import pygame
+import os.path
 from sys import exit
 
 scriptDir = os.path.dirname(os.path.abspath(__file__))
@@ -10,9 +13,9 @@ def main():
     
     #Surfaces for ground and sky
     skySurface = pygame.image.load(os.path.join(scriptDir,"graphics","sky.png")).convert()
-    scale2x
     groundSurface = pygame.image.load(os.path.join(scriptDir,"graphics","grass2.png")).convert()
-    
+    largeSky=pygame.transform.scale2x(skySurface)
+    largeGround=pygame.transform.scale_by(groundSurface,4)
     
     while True:
         # poll for events
@@ -23,8 +26,8 @@ def main():
                 exit()
                 
         
-        screen.blit(skySurface,(0,0))
-        screen.blit(groundSurface,(0,300))
+        screen.blit(largeSky,(0,0))
+        screen.blit(largeGround,(0,475))
     # fill the screen with a color to wipe away anything from last frame
 
     # RENDER YOUR GAME HERE
