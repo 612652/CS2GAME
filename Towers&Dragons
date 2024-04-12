@@ -1,4 +1,3 @@
-# Example file showing a basic pygame "game loop"
 import pygame
 import os.path
 from sys import exit
@@ -18,23 +17,18 @@ def main():
     largeGround=pygame.transform.scale_by(groundSurface,4)
     
     while True:
-        # poll for events
-        # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT: #Exits if 'X' button is clicked
                 pygame.quit()
                 exit()
-                
         
-        screen.blit(largeSky,(0,0))
+        #Places the sky and ground on screen
+        screen.blit(largeSky,(0,0)) 
         screen.blit(largeGround,(0,475))
-    # fill the screen with a color to wipe away anything from last frame
 
-    # RENDER YOUR GAME HERE
-
-    # flip() the display to put your work on screen
-        pygame.display.flip()
-
+    #RENDER YOUR GAME HERE
+        
+        pygame.display.update()
         clock.tick(60)  # limits FPS to 60
 
 if __name__ == "__main__":
