@@ -12,13 +12,9 @@ def main():
     clock = pygame.time.Clock()
     
     #tower Surface and Rect
-    towerFullSurface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
-
-    
+    towerSurface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
     towerSurface = pygame.transform.scale_by(towerSurface,.7)
     towerRect = towerSurface.get_rect(midbottom=(200,500))
-    
-    #cannon surface and rect
     
     
     #Surfaces for ground and sky
