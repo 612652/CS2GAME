@@ -3,13 +3,26 @@ import pygame
 import os.path
 from sys import exit
 
+scriptDir = os.path.dirname(os.path.abspath(__file__))
+
 def main():
     # pygame setup
     pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
+    screen = pygame.display.set_mode((1200, 720))
     clock = pygame.time.Clock()
     
-
+    #tower Surface and Rect
+    towerSurface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
+    towerSurface = pygame.transform.scale_by(towerSurface,.7)
+    towerRect = towerSurface.get_rect(midbottom=(200,500))
+    
+    
+    #Surfaces for ground and sky
+    skySurface = pygame.image.load(os.path.join(scriptDir,"graphics","sky.png")).convert()
+    groundSurface = pygame.image.load(os.path.join(scriptDir,"graphics","grass2.png")).convert()
+    largeSky=pygame.transform.scale2x(skySurface)
+    largeGround=pygame.transform.scale_by(groundSurface,4)
+    
     while True:
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
@@ -17,9 +30,14 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+                
+        #background Surfaces
+        screen.blit(largeSky,(0,0))
+        screen.blit(largeGround,(0,475))
+        
+        screen.blit(towerSurface,towerRect)
 
     # fill the screen with a color to wipe away anything from last frame
-        screen.fill("purple")
 
     # RENDER YOUR GAME HERE
 
@@ -27,9 +45,6 @@ def main():
         pygame.display.flip()
 
         clock.tick(60)  # limits FPS to 60
-
-
-
 
 if __name__ == "__main__":
     main()
