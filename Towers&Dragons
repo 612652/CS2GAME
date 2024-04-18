@@ -2,8 +2,47 @@
 import pygame
 import os.path
 from sys import exit
+from pygame.sprite import Group
+from random import randint,choice
 
 scriptDir = os.path.dirname(os.path.abspath(__file__))
+
+# class tower(pygame.sprite.Sprite):
+#     def __init__(self):
+        # super().__init__()
+    # tower0Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
+    # tower0Surface = pygame.transform.scale_by(tower0Surface,.7)
+    # tower2Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower2.png")).convert_alpha()
+    # tower2Surface = pygame.transform.scale_by(tower0Surface,.7)
+    # tower3Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower3.png")).convert_alpha()
+    # tower3Surface = pygame.transform.scale_by(tower0Surface,.7)
+    # 
+    # self.towerBreak = [tower0Surface,tower2Surface,tower3Surface]
+
+
+#class hold all enemies for the game
+class dragon(pygame.sprite.Sprite):
+    def __init__(self,type):
+        super().__init__()
+        if type == "land Dragon":
+            dragonWalk1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon0"))
+            dragonWalk2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1"))
+            dragonWalk3= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon2"))
+            self.frame = [dragonWalk1,dragonWalk2,dragonWalk3]
+            yPos = 475
+        else:
+            dragonFly1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_SkyDragon0"))
+            dragonFly2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_SkyDragon1"))
+            self.frame = [dragonFly1,dragonFly2]
+            yPos = 260
+        self.dragonIndex = 0
+    def animationState(self):
+        self.obstacleIndex+= 0.1
+        if self.obstacleIndex >= len(self.frame):
+            self.obstacleIndex = 0
+        self.image = self.frame[int(self.obstacleIndex)]
+        self.image = self.frame[self.obstacleIndex]
+        self.rect = self.image.get_rect(bottomright=(randint(900,1100),yPos))
 
 def main():
     # pygame setup
@@ -19,7 +58,7 @@ def main():
     
     #Surfaces for ground and sky
     skySurface = pygame.image.load(os.path.join(scriptDir,"graphics","sky.png")).convert()
-    groundSurface = pygame.image.load(os.path.join(scriptDir,"graphics","grass2.png")).convert()
+    groundSurface = pygame.image.load(os.path.join(scriptDir,"graphics","grass.png")).convert()
     largeSky=pygame.transform.scale2x(skySurface)
     largeGround=pygame.transform.scale_by(groundSurface,4)
     
@@ -48,3 +87,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
