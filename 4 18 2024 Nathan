@@ -1,0 +1,145 @@
+# Example file showing a basic pygame "game loop"
+import pygame
+import os.path
+from sys import exit
+from pygame.sprite import Group
+from random import randint,choice
+
+scriptDir = os.path.dirname(os.path.abspath(__file__))
+
+# class tower(pygame.sprite.Sprite):
+#     def __init__(self):
+        # super().__init__()
+    # tower0Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
+    # tower0Surface = pygame.transform.scale_by(tower0Surface,.7)
+    # tower2Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower2.png")).convert_alpha()
+    # tower2Surface = pygame.transform.scale_by(tower0Surface,.7)
+    # tower3Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower3.png")).convert_alpha()
+    # tower3Surface = pygame.transform.scale_by(tower0Surface,.7)
+    # 
+    # self.towerBreak = [tower0Surface,tower2Surface,tower3Surface]
+
+
+#class hold all enemies for the game
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self,type):
+        super().__init__()
+        if type == "land Dragon":
+            dragonWalk1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon0")).convert_alpha
+            dragonWalk2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1")).convert_alpha
+            dragonWalk3= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon2")).convert_alpha
+            self.frame = [dragonWalk1,dragonWalk2,dragonWalk3]
+            yPos = 475
+        else:
+            dragonFly1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_SkyDragon0")).convert_alpha
+            dragonFly2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_SkyDragon1")).convert_alpha
+            self.frame = [dragonFly1,dragonFly2]
+            yPos = 260
+            
+        self.obstacleIndexIndex = 0
+        
+        self.image = self.frames[self.obstacleIndex]
+        self.rect = self.image.get_rect(bottomright=(randint(1300, 420), yPos))
+        
+    def animationState(self):
+        self.obstacleIndex+= 0.1
+        if self.obstacleIndex >= len(self.frame):
+            self.obstacleIndex = 0
+        self.image = self.frame[int(self.obstacleIndex)]
+    
+    def update(self):
+        self.animationState() #check for animation updates
+        self.rect.x -= 6 #updating x value
+        self.destroy() #check to see if we need to delete objs
+    
+    def destroy(self):
+        #if the rect. hits the left boundary
+        #   remove the sprite
+        if self.rect.x <= -100:
+            self.kill()
+
+def obstacleMovement(list, screen, landDragon, skyDragon):
+    if list: #as long as list has items
+        for rect in list:
+            rect.x -= 5
+            
+            #if the current rect's bottom touches x = 300 (ground)
+            #   then it should be a snail!
+            if rect.bottom == 475:
+                screen.blit(landDragon, rect)
+            else: #otherwise, fly surface
+                screen.blit(skyDragon, rect)
+    
+        #check to see if any rect x val is less than -100
+        #   if so, we want to kill the rect
+        list = [obstacle for obstacle in list if obstacle.x > -100]
+        return list
+    #None can't append, so you need to return an empty list if no elements
+    else:
+        return []
+
+def main():
+    # pygame setup
+    pygame.init()
+    screen = pygame.display.set_mode((1200, 720))
+    clock = pygame.time.Clock()
+    
+    gameActive = True
+    
+    obstacleGroup = pygame.sprite.Group()
+    
+    #tower Surface and Rect
+    towerSurface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
+    towerSurface = pygame.transform.scale_by(towerSurface,.7)
+    towerRect = towerSurface.get_rect(midbottom=(200,500))
+    
+    #TIMER
+    
+    obstacleTimer = pygame.USEREVENT + 1 #timer in which a  new obstacle is created
+    pygame.time.set_timer(obstacleTimer,900)#(what to do, how often)
+    #timers for obstacles animationsl
+    landDragonTimer = pygame.USEREVENT + 2
+    pygame.time.set_timer(landDragonTimer,500)
+    
+    skyDragonTimer = pygame.USEREVENT + 3
+    pygame.time.set_timer(skyDragonTimer,500)
+    
+    #Surfaces for ground and sky
+    skySurface = pygame.image.load(os.path.join(scriptDir,"graphics","sky.png")).convert()
+    groundSurface = pygame.image.load(os.path.join(scriptDir,"graphics","grass.png")).convert()
+    largeSky=pygame.transform.scale2x(skySurface)
+    largeGround=pygame.transform.scale_by(groundSurface,4)
+    
+    while True:
+        # poll for events
+        # pygame.QUIT event means the user clicked X to close your window
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+        if gameActive:
+            if event.type == obstacleTimer:
+                obstacleGroup.add(Obstacle(choice(["skyDragon","landDragon","landDragon","landDragon"])))
+        #background Surfaces
+        screen.blit(largeSky,(0,0))
+        screen.blit(largeGround,(0,475))
+        
+        screen.blit(towerSurface,towerRect)
+    
+        if gameActive:
+        
+            obstacleGroup.draw(screen)
+            obstacleGroup.update()
+
+    # fill the screen with a color to wipe away anything from last frame
+
+    # RENDER YOUR GAME HERE
+
+    # flip() the display to put your work on screen
+        pygame.display.flip()
+
+        clock.tick(60)  # limits FPS to 60
+
+if __name__ == "__main__":
+    main()
+    
