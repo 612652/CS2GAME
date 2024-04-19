@@ -7,17 +7,23 @@ from random import randint,choice
 
 scriptDir = os.path.dirname(os.path.abspath(__file__))
 
-# class tower(pygame.sprite.Sprite):
-#     def __init__(self):
-        # super().__init__()
-    # tower0Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
-    # tower0Surface = pygame.transform.scale_by(tower0Surface,.7)
-    # tower2Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower2.png")).convert_alpha()
-    # tower2Surface = pygame.transform.scale_by(tower0Surface,.7)
-    # tower3Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower3.png")).convert_alpha()
-    # tower3Surface = pygame.transform.scale_by(tower0Surface,.7)
-    # 
-    # self.towerBreak = [tower0Surface,tower2Surface,tower3Surface]
+#Class to make the tower
+class makeTower(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        #Frames for the Tower
+        tower0Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
+        tower0Surface = pygame.transform.scale_by(tower0Surface,.7)
+        tower2Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower2.png")).convert_alpha()
+        tower2Surface = pygame.transform.scale_by(tower0Surface,.7)
+        tower3Surface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower3.png")).convert_alpha()
+        tower3Surface = pygame.transform.scale_by(tower0Surface,.7)
+        
+        self.towerBreak = [tower0Surface,tower2Surface,tower3Surface]
+        self.towerIndex = 0
+        
+        self.image = self.towerBreak[self.towerIndex]
+        self.rect = self.image.get_rect(midbottom =(80,475))
 
 
 #class hold all enemies for the game
