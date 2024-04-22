@@ -5,6 +5,6 @@ CodeAngelUr’s Role: Designer and Project Manager
 ’s Role:  Software Designer and QA Manager
 
 Credits-
-Ground:
-Sky:
+Ground: GrumpyDiamond
+Sky: Santoniche
 all others assests: CodeAngelUr 
