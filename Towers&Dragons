@@ -47,13 +47,14 @@ class Obstacle(pygame.sprite.Sprite):
         self.obstacleIndex = 0
         
         self.image = self.frame[self.obstacleIndex]
-        self.rect = self.image.get_rect(bottomright=(randint(500, 500), yPos))
+        self.rect = self.image.get_rect(bottomright=(randint(1200, 1250), yPos))
         
     def animationState(self):
         self.obstacleIndex+= 0.1
         if self.obstacleIndex >= len(self.frame):
             self.obstacleIndex = 0
         self.image = self.frame[int(self.obstacleIndex)]
+        pass
     
     def update(self):
         self.animationState() #check for animation updates
@@ -66,30 +67,13 @@ class Obstacle(pygame.sprite.Sprite):
         if self.rect.x <= -100:
             self.kill()
 
-def obstacleMovement(list, screen, landDragon, skyDragon):
-    if list: #as long as list has items
-        for rect in list:
-            rect.x -= 5
-            
-            #if the current rect's bottom touches x = 300 (ground)
-            #   then it should be a snail!
-            if rect.bottom == 475:
-                screen.blit(landDragon, rect)
-            else: #otherwise, fly surface
-                screen.blit(skyDragon, rect)
-    
-        #check to see if any rect x val is less than -100
-        #   if so, we want to kill the rect
-        list = [obstacle for obstacle in list if obstacle.x > -100]
-        return list
-    #None can't append, so you need to return an empty list if no elements
-    else:
-        return []
 
+screenLength = 1200
+screenWidth = 720
 def main():
     # pygame setup
     pygame.init()
-    screen = pygame.display.set_mode((1200, 720))
+    screen = pygame.display.set_mode((screenLength, screenWidth))
     clock = pygame.time.Clock()
     
     gameActive = True
@@ -106,11 +90,6 @@ def main():
     obstacleTimer = pygame.USEREVENT + 1 #timer in which a  new obstacle is created
     pygame.time.set_timer(obstacleTimer,900)#(what to do, how often)
     #timers for obstacles animationsl
-    landDragonTimer = pygame.USEREVENT + 2
-    pygame.time.set_timer(landDragonTimer,500)
-    
-    skyDragonTimer = pygame.USEREVENT + 3
-    pygame.time.set_timer(skyDragonTimer,500)
     
     #Surfaces for ground and sky
     skySurface = pygame.image.load(os.path.join(scriptDir,"graphics","sky.png")).convert()
@@ -125,14 +104,12 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        if gameActive:
-            if event.type == obstacleTimer:
-                
-                obstacleGroup.add(Obstacle(choice(["skyDragon","landDragon","landDragon","landDragon"])))
+            if gameActive:
+                if event.type == obstacleTimer:
+                    obstacleGroup.add(Obstacle(choice(["skyDragon","landDragon","landDragon","landDragon"])))
                 
 
         
-        screen.blit(towerSurface,towerRect)
     
         if gameActive:
             #background Surfaces
@@ -146,7 +123,7 @@ def main():
             
 
     # flip() the display to put your work on screen
-        pygame.display.flip()
+        pygame.display.update()
 
         clock.tick(60)  # limits FPS to 60
 
