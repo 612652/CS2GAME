@@ -54,7 +54,7 @@ class Obstacle(pygame.sprite.Sprite):
         if self.obstacleIndex >= len(self.frame):
             self.obstacleIndex = 0
         self.image = self.frame[int(self.obstacleIndex)]
-        pass
+        
     
     def update(self):
         self.animationState() #check for animation updates
@@ -107,7 +107,7 @@ def main():
                 exit()
             if gameActive:
                 if event.type == obstacleTimer:
-                    obstacleGroup.add(Obstacle(choice(["skyDragon","landDragon","landDragon","landDragon"])))
+                    obstacleGroup.add(Obstacle(choice(["LandDragon","LandDragon","LandDragon","skyDragon","skyDragon"])))
                 
 
         
@@ -117,6 +117,7 @@ def main():
             screen.blit(largeSky,(0,0))
             screen.blit(largeGround,(0,475))
             
+            #makeTower.draw(screen)
             
             obstacleGroup.draw(screen)
             obstacleGroup.update()
