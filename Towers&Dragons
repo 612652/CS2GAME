@@ -23,7 +23,7 @@ class makeTower(pygame.sprite.Sprite):
         self.towerIndex = 0
         
         self.image = self.towerBreak[self.towerIndex]
-        self.rect = self.image.get_rect(midbottom =(80,475))
+        self.rect = self.image.get_rect(midbottom =(100,500))
 
 
 #class hold all enemies for the game
@@ -68,6 +68,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.kill()
 
 
+
 screenLength = 1200
 screenWidth = 720
 def main():
@@ -78,6 +79,9 @@ def main():
     
     gameActive = True
     
+    tower = pygame.sprite.GroupSingle()
+    tower.add(makeTower())
+    
     obstacleGroup = pygame.sprite.Group()
     
     #tower Surface and Rect
@@ -86,9 +90,8 @@ def main():
     towerRect = towerSurface.get_rect(midbottom=(200,500))
     
     #TIMER
-    
     obstacleTimer = pygame.USEREVENT + 1 #timer in which a  new obstacle is created
-    pygame.time.set_timer(obstacleTimer,900)#(what to do, how often)
+    pygame.time.set_timer(obstacleTimer,1300)#(what to do, how often)
     #timers for obstacles animations
     
     
@@ -117,7 +120,8 @@ def main():
             screen.blit(largeSky,(0,0))
             screen.blit(largeGround,(0,475))
             
-            #makeTower.draw(screen)
+            tower.draw(screen)
+            tower.update()
             
             obstacleGroup.draw(screen)
             obstacleGroup.update()
