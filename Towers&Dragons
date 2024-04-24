@@ -66,7 +66,14 @@ class Obstacle(pygame.sprite.Sprite):
         #   remove the sprite
         if self.rect.x <= -100:
             self.kill()
-
+def collisionSprite(tower,obstacles):
+    if pygame.sprite.spritecollide(makeTower.sprite, obstacles,False):
+        obstacles.empty()
+        tower.sprite.rect.midbottom = (80,300)
+        print("a")
+        return False
+    else:
+        return True
 
 
 screenLength = 1200
@@ -126,6 +133,7 @@ def main():
             obstacleGroup.draw(screen)
             obstacleGroup.update()
             
+            collisionSprite(tower, obstacleGroup)#<--here
             
 
     # flip() the display to put your work on screen
