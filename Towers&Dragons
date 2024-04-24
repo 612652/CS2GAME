@@ -30,8 +30,8 @@ class makeTower(pygame.sprite.Sprite):
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self,type):
         super().__init__()
-        self.frame = [] 
-        if type == "land Dragon":
+
+        if type == "LandDragon":
             dragonWalk1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon0.png")).convert_alpha()
             dragonWalk2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1.png")).convert_alpha()
             dragonWalk3= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon2.png")).convert_alpha()
@@ -89,7 +89,8 @@ def main():
     
     obstacleTimer = pygame.USEREVENT + 1 #timer in which a  new obstacle is created
     pygame.time.set_timer(obstacleTimer,900)#(what to do, how often)
-    #timers for obstacles animationsl
+    #timers for obstacles animations
+    
     
     #Surfaces for ground and sky
     skySurface = pygame.image.load(os.path.join(scriptDir,"graphics","sky.png")).convert()
