@@ -67,10 +67,10 @@ class Obstacle(pygame.sprite.Sprite):
         if self.rect.x <= -100:
             self.kill()
 def collisionSprite(tower,obstacles):
-    if pygame.sprite.spritecollide(makeTower.sprite, obstacles,False):
+    if pygame.sprite.spritecollide(tower.sprite, obstacles,False):
         obstacles.empty()
         tower.sprite.rect.midbottom = (80,300)
-        print("a")
+        print("hit")
         return False
     else:
         return True
@@ -133,8 +133,9 @@ def main():
             obstacleGroup.draw(screen)
             obstacleGroup.update()
             
-            collisionSprite(tower, obstacleGroup)#<--here
-            
+            gameActive = collisionSprite(tower, obstacleGroup)#<--here
+        else: 
+            screen.fill("red")
 
     # flip() the display to put your work on screen
         pygame.display.update()
