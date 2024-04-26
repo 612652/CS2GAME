@@ -69,7 +69,6 @@ class Obstacle(pygame.sprite.Sprite):
 def collisionSprite(tower,obstacles):
     if pygame.sprite.spritecollide(tower.sprite, obstacles,False):
         obstacles.empty()
-        tower.sprite.rect.midbottom = (80,300)
         print("hit")
         return False
     else:
@@ -90,11 +89,6 @@ def main():
     tower.add(makeTower())
     
     obstacleGroup = pygame.sprite.Group()
-    
-    #tower Surface and Rect
-    towerSurface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
-    towerSurface = pygame.transform.scale_by(towerSurface,.7)
-    towerRect = towerSurface.get_rect(midbottom=(200,500))
     
     #TIMER
     obstacleTimer = pygame.USEREVENT + 1 #timer in which a  new obstacle is created
@@ -119,8 +113,12 @@ def main():
                 if event.type == obstacleTimer:
                     obstacleGroup.add(Obstacle(choice(["LandDragon","LandDragon","LandDragon","skyDragon","skyDragon"])))
                 
-
-        
+        #start over
+            else: 
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    gameActive = True
+                    #snailRect.left= 800#temp fix
+                    startTime = int(pygame.time.get_ticks()/1000)
     
         if gameActive:
             #background Surfaces
@@ -144,4 +142,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
