@@ -23,35 +23,38 @@ class makeTower(pygame.sprite.Sprite):
         self.towerIndex = 0
         
         self.image = self.towerBreak[self.towerIndex]
-        self.rect = self.image.get_rect(midbottom =(80,475))
+        self.rect = self.image.get_rect(midbottom =(100,500))
 
 
 #class hold all enemies for the game
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self,type):
         super().__init__()
-        if type == "land Dragon":
-            dragonWalk1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon0")).convert_alpha
-            dragonWalk2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1")).convert_alpha
-            dragonWalk3= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon2")).convert_alpha
+
+        if type == "LandDragon":
+            dragonWalk1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon0.png")).convert_alpha()
+            dragonWalk2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1.png")).convert_alpha()
+            dragonWalk3= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon2.png")).convert_alpha()
+            
             self.frame = [dragonWalk1,dragonWalk2,dragonWalk3]
             yPos = 475
         else:
-            dragonFly1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_SkyDragon0")).convert_alpha
-            dragonFly2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_SkyDragon1")).convert_alpha
+            dragonFly1= pygame.image.load(os.path.join(scriptDir,"graphics/Sky Dragon","sprite_SkyDragon0.png")).convert_alpha()
+            dragonFly2= pygame.image.load(os.path.join(scriptDir,"graphics/Sky Dragon","sprite_SkyDragon1.png")).convert_alpha()
             self.frame = [dragonFly1,dragonFly2]
             yPos = 260
             
-        self.obstacleIndexIndex = 0
+        self.obstacleIndex = 0
         
-        self.image = self.frames[self.obstacleIndex]
-        self.rect = self.image.get_rect(bottomright=(randint(1300, 420), yPos))
+        self.image = self.frame[self.obstacleIndex]
+        self.rect = self.image.get_rect(bottomright=(randint(1200, 1250), yPos))
         
     def animationState(self):
         self.obstacleIndex+= 0.1
         if self.obstacleIndex >= len(self.frame):
             self.obstacleIndex = 0
         self.image = self.frame[int(self.obstacleIndex)]
+        
     
     def update(self):
         self.animationState() #check for animation updates
@@ -63,58 +66,46 @@ class Obstacle(pygame.sprite.Sprite):
         #   remove the sprite
         if self.rect.x <= -100:
             self.kill()
-
-def obstacleMovement(list, screen, landDragon, skyDragon):
-    if list: #as long as list has items
-        for rect in list:
-            rect.x -= 5
-            
-            #if the current rect's bottom touches x = 300 (ground)
-            #   then it should be a snail!
-            if rect.bottom == 475:
-                screen.blit(landDragon, rect)
-            else: #otherwise, fly surface
-                screen.blit(skyDragon, rect)
-    
-        #check to see if any rect x val is less than -100
-        #   if so, we want to kill the rect
-        list = [obstacle for obstacle in list if obstacle.x > -100]
-        return list
-    #None can't append, so you need to return an empty list if no elements
+def collisionSprite(tower,obstacles):
+    if pygame.sprite.spritecollide(tower.sprite, obstacles,False):
+        obstacles.empty()
+        print("hit")
+        return False
     else:
-        return []
+        return True
 
+
+screenLength = 1200
+screenWidth = 720
 def main():
     # pygame setup
     pygame.init()
-    screen = pygame.display.set_mode((1200, 720))
+    screen = pygame.display.set_mode((screenLength, screenWidth))
     clock = pygame.time.Clock()
     
     gameActive = True
     
+    tower = pygame.sprite.GroupSingle()
+    tower.add(makeTower())
+    
     obstacleGroup = pygame.sprite.Group()
     
-    #tower Surface and Rect
-    towerSurface = pygame.image.load(os.path.join(scriptDir,"graphics/Tower","sprite_Tower0.png")).convert_alpha()
-    towerSurface = pygame.transform.scale_by(towerSurface,.7)
-    towerRect = towerSurface.get_rect(midbottom=(200,500))
-    
     #TIMER
-    
     obstacleTimer = pygame.USEREVENT + 1 #timer in which a  new obstacle is created
-    pygame.time.set_timer(obstacleTimer,900)#(what to do, how often)
-    #timers for obstacles animationsl
-    landDragonTimer = pygame.USEREVENT + 2
-    pygame.time.set_timer(landDragonTimer,500)
+    pygame.time.set_timer(obstacleTimer,1300)#(what to do, how often)
+    #timers for obstacles animations
     
-    skyDragonTimer = pygame.USEREVENT + 3
-    pygame.time.set_timer(skyDragonTimer,500)
     
     #Surfaces for ground and sky
     skySurface = pygame.image.load(os.path.join(scriptDir,"graphics","sky.png")).convert()
     groundSurface = pygame.image.load(os.path.join(scriptDir,"graphics","grass.png")).convert()
     largeSky=pygame.transform.scale2x(skySurface)
     largeGround=pygame.transform.scale_by(groundSurface,4)
+    
+    testFont = pygame.font.Font(None, 50)
+    
+    gameMessage = testFont.render("Press space to revive", False, "black")
+    gameMessageRect = gameMessage.get_rect(center=(603, 600))
     
     while True:
         # poll for events
@@ -123,29 +114,38 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+            if gameActive:
+                if event.type == obstacleTimer:
+                    obstacleGroup.add(Obstacle(choice(["LandDragon","LandDragon","LandDragon","skyDragon","skyDragon"])))
+                
+        #start over
+            else: 
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    gameActive = True
+                    #snailRect.left= 800#temp fix
+                    startTime = int(pygame.time.get_ticks()/1000)
+
         if gameActive:
-            if event.type == obstacleTimer:
-                obstacleGroup.add(Obstacle(choice(["skyDragon","landDragon","landDragon","landDragon"])))
-        #background Surfaces
-        screen.blit(largeSky,(0,0))
-        screen.blit(largeGround,(0,475))
-        
-        screen.blit(towerSurface,towerRect)
-    
-        if gameActive:
-        
+            #background Surfaces
+            screen.blit(largeSky,(0,0))
+            screen.blit(largeGround,(0,475))
+            
+            tower.draw(screen)
+            tower.update()
+            
             obstacleGroup.draw(screen)
             obstacleGroup.update()
-
-    # fill the screen with a color to wipe away anything from last frame
-
-    # RENDER YOUR GAME HERE
+            
+            gameActive = collisionSprite(tower, obstacleGroup)#<--here
+        else: 
+            screen.fill("darkred")
+            
+            screen.blit(gameMessage,gameMessageRect)
 
     # flip() the display to put your work on screen
-        pygame.display.flip()
+        pygame.display.update()
 
         clock.tick(60)  # limits FPS to 60
 
 if __name__ == "__main__":
     main()
-    
