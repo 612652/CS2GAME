@@ -60,7 +60,13 @@ class Obstacle(pygame.sprite.Sprite):
         self.animationState() #check for animation updates
         self.rect.x -= 6 #updating x value
         self.destroy() #check to see if we need to delete objs
-    
+        self.clicked()
+    def clicked(self):
+        click = pygame.mouse.get_pos()
+        if pygame.mouse.get_pressed()[0]:
+            if self.rect.collidepoint(click):
+                self.kill()
+        
     def destroy(self):
         #if the rect. hits the left boundary
         #   remove the sprite
@@ -73,10 +79,18 @@ def collisionSprite(tower,obstacles):
         return False
     else:
         return True
+# def cannonHit(obstacles):
+#     if pygame.mouse.get_pressed()[0]:
+#         x,y = pygame.mouse.get_pos()
+#         print(x,y)
+#         if y == obstacles.get_rect():
+#             print ("kill")
+
 
 
 screenLength = 1200
 screenWidth = 720
+
 def main():
     # pygame setup
     pygame.init()
@@ -102,8 +116,16 @@ def main():
     largeSky=pygame.transform.scale2x(skySurface)
     largeGround=pygame.transform.scale_by(groundSurface,4)
     
+    testFont = pygame.font.Font(None, 50)
+    
+    gameMessage = testFont.render("Press space to revive", False, "black")
+    gameMessageRect = gameMessage.get_rect(center=(603, 600))
+    #in event handling:
+
+    
     while True:
         # poll for events
+        
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -113,6 +135,7 @@ def main():
                 if event.type == obstacleTimer:
                     obstacleGroup.add(Obstacle(choice(["LandDragon","LandDragon","LandDragon","skyDragon","skyDragon"])))
                 
+        
         #start over
             else: 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
@@ -131,9 +154,12 @@ def main():
             obstacleGroup.draw(screen)
             obstacleGroup.update()
             
-            gameActive = collisionSprite(tower, obstacleGroup)#<--here
+            gameActive = collisionSprite(tower, obstacleGroup)
+            
         else: 
-            screen.fill("red")
+            screen.fill("darkred")
+            
+            screen.blit(gameMessage,gameMessageRect)
 
     # flip() the display to put your work on screen
         pygame.display.update()
