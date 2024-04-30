@@ -24,9 +24,23 @@ class makeTower(pygame.sprite.Sprite):
         
         self.image = self.towerBreak[self.towerIndex]
         self.rect = self.image.get_rect(midbottom =(100,500))
+        
+class Cannon(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        cannon0Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon1Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon2Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon3Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon4Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon5Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon6Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon7Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon8Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon9Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        
 
 
-#class hold all enemies for the game
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self,type):
         super().__init__()
@@ -122,7 +136,7 @@ def main():
     
     landPicture2 = pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1.png")).convert_alpha()
     landPicture2 = pygame.transform.rotozoom(landPicture2, 0, 2)
-    landPictureRect2 = landPicture2.get_rect(center = (950, 400))
+    landPictureRect2 = landPicture2.get_rect(center = (950, 380))
     
     
     testFont = pygame.font.Font(None, 50)
