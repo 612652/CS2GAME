@@ -24,6 +24,7 @@ class makeTower(pygame.sprite.Sprite):
         
         self.image = self.towerBreak[self.towerIndex]
         self.rect = self.image.get_rect(midbottom =(100,500))
+#Class to make the cannon
 class Cannon(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -32,16 +33,12 @@ class Cannon(pygame.sprite.Sprite):
         cannon2Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon4.png")).convert_alpha()
         cannon3Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon6.png")).convert_alpha()
         cannon4Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon8.png")).convert_alpha()
-        # cannon5Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon")).convert_alpha()
-        # cannon6Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        # cannon7Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        # cannon8Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        # cannon9Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        self.cannonList = [cannon0Surface,cannon1Surface,cannon2Surface,cannon3Surface,cannon4Surface]
+        
+        self.cannonPosition = [cannon0Surface,cannon1Surface,cannon2Surface,cannon3Surface,cannon4Surface]
         self.cannonIndex = 0
         
-        self.image = self.cannonList[self.cannonList]
-        self.rect = sel.image.get_rect(midbottom=(300,100))
+        self.image = self.cannonPosition[self.cannonIndex]
+        self.rect = self.image.get_rect(midbottom=(250, 260))
 
 #class hold all enemies for the game
 class Obstacle(pygame.sprite.Sprite):
@@ -113,8 +110,8 @@ def main():
     tower = pygame.sprite.GroupSingle()
     tower.add(makeTower())
     
-    # cannon = pygame.sprite.GroupSingle()
-    # cannon.add(Cannon())
+    cannon = pygame.sprite.GroupSingle()
+    cannon.add(Cannon())
     
     obstacleGroup = pygame.sprite.Group()
     
@@ -183,13 +180,14 @@ def main():
             tower.draw(screen)
             tower.update()
             
-            # cannon.draw(screen)
-            # cannon.update()#<<
+            cannon.draw(screen)
+            cannon.update()
             
             obstacleGroup.draw(screen)
             obstacleGroup.update()
             
             gameActive = collisionSprite(tower, obstacleGroup)#<--here
+            
         else: 
             screen.fill("darkred")
             
