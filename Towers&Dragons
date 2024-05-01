@@ -24,6 +24,8 @@ class makeTower(pygame.sprite.Sprite):
         
         self.image = self.towerBreak[self.towerIndex]
         self.rect = self.image.get_rect(midbottom =(100,500))
+    def update(self):
+        self.image = self.towerBreak[self.towerIndex]
 #Class to make the cannon
 class Cannon(pygame.sprite.Sprite):
     def __init__(self):
