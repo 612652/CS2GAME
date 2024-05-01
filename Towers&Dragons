@@ -88,12 +88,14 @@ class Obstacle(pygame.sprite.Sprite):
             self.kill()
 def collisionSprite(tower,obstacles):
     if pygame.sprite.spritecollide(tower.sprite, obstacles,True):
-        # obstacles.empty()
+        
         tower.sprite.towerIndex += 1
         print("hit")
         if tower.sprite.towerIndex >= 3:
             tower.sprite.towerIndex  = 0
+            obstacles.empty()
             return False
+        
     return True
 
 
@@ -117,7 +119,7 @@ def main():
     
     #TIMER
     obstacleTimer = pygame.USEREVENT + 1 #timer in which a  new obstacle is created
-    pygame.time.set_timer(obstacleTimer,1300)#(what to do, how often)
+    pygame.time.set_timer(obstacleTimer,500)#(what to do, how often)
     #timers for obstacles animations
     
     
@@ -169,7 +171,7 @@ def main():
             else: 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     gameActive = True
-                    #snailRect.left= 800#temp fix
+                    
                     startTime = int(pygame.time.get_ticks()/1000)
 
         if gameActive:
@@ -190,6 +192,7 @@ def main():
             
         else: 
             screen.fill("darkred")
+            
             
             screen.blit(skyPicture, skyPictureRect)
             screen.blit(skyPicture2, skyPictureRect2)
