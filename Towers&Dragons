@@ -24,23 +24,26 @@ class makeTower(pygame.sprite.Sprite):
         
         self.image = self.towerBreak[self.towerIndex]
         self.rect = self.image.get_rect(midbottom =(100,500))
-        
 class Cannon(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        cannon0Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon1Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon2Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon3Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon4Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon5Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon6Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon7Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon8Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
-        cannon9Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        cannon0Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon0.png")).convert_alpha()
+        cannon1Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon2.png")).convert_alpha()
+        cannon2Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon4.png")).convert_alpha()
+        cannon3Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon6.png")).convert_alpha()
+        cannon4Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon8.png")).convert_alpha()
+        # cannon5Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_Cannon")).convert_alpha()
+        # cannon6Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        # cannon7Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        # cannon8Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        # cannon9Surface = pygame.image.load(os.path.join(scriptDir, "graphics/Cannon", "sprite_00.png")).convert_alpha()
+        self.cannonList = [cannon0Surface,cannon1Surface,cannon2Surface,cannon3Surface,cannon4Surface]
+        self.cannonIndex = 0
         
+        self.image = self.cannonList[self.cannonList]
+        self.rect = sel.image.get_rect(midbottom=(300,100))
 
-
+#class hold all enemies for the game
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self,type):
         super().__init__()
@@ -87,12 +90,14 @@ class Obstacle(pygame.sprite.Sprite):
         if self.rect.x <= -100:
             self.kill()
 def collisionSprite(tower,obstacles):
-    if pygame.sprite.spritecollide(tower.sprite, obstacles,False):
-        obstacles.empty()
+    if pygame.sprite.spritecollide(tower.sprite, obstacles,True):
+        # obstacles.empty()
+        tower.sprite.towerIndex += 1
         print("hit")
-        return False
-    else:
-        return True
+        if tower.sprite.towerIndex >= 3:
+            tower.sprite.towerIndex  = 0
+            return False
+    return True
 
 
 screenLength = 1200
@@ -108,6 +113,9 @@ def main():
     tower = pygame.sprite.GroupSingle()
     tower.add(makeTower())
     
+    # cannon = pygame.sprite.GroupSingle()
+    # cannon.add(Cannon())
+    
     obstacleGroup = pygame.sprite.Group()
     
     #TIMER
@@ -121,6 +129,7 @@ def main():
     groundSurface = pygame.image.load(os.path.join(scriptDir,"graphics","grass.png")).convert()
     largeSky=pygame.transform.scale2x(skySurface)
     largeGround=pygame.transform.scale_by(groundSurface,4)
+    
     
     skyPicture = pygame.image.load(os.path.join(scriptDir,"graphics/Sky Dragon","sprite_SkyDragon0.png")).convert_alpha()
     skyPicture = pygame.transform.rotozoom(skyPicture, 0, 2)
@@ -136,7 +145,7 @@ def main():
     
     landPicture2 = pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1.png")).convert_alpha()
     landPicture2 = pygame.transform.rotozoom(landPicture2, 0, 2)
-    landPictureRect2 = landPicture2.get_rect(center = (950, 380))
+    landPictureRect2 = landPicture2.get_rect(center = (950, 400))
     
     
     testFont = pygame.font.Font(None, 50)
@@ -173,6 +182,9 @@ def main():
             
             tower.draw(screen)
             tower.update()
+            
+            # cannon.draw(screen)
+            # cannon.update()#<<
             
             obstacleGroup.draw(screen)
             obstacleGroup.update()
