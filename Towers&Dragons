@@ -1,5 +1,6 @@
 # Example file showing a basic pygame "game loop"
 import pygame
+from pygame.locals import *
 import os.path
 from sys import exit
 from pygame.sprite import Group
@@ -90,14 +91,15 @@ class Obstacle(pygame.sprite.Sprite):
             self.kill()
 def collisionSprite(tower,obstacles):
     if pygame.sprite.spritecollide(tower.sprite, obstacles,True):
-        
         tower.sprite.towerIndex += 1
         print("hit") 
         if tower.sprite.towerIndex >= 3:
             tower.sprite.towerIndex  = 0
             obstacles.empty()
             return False
-        
+    if tower.sprite.towerIndex >= 0:
+        if pygame.key.get_pressed()[pygame.K_h]:
+            tower.sprite.towerIndex -= 1
     return True
 
 
@@ -109,7 +111,7 @@ def main():
     screen = pygame.display.set_mode((screenLength, screenWidth))
     clock = pygame.time.Clock()
     
-    gameActive = True
+    gameActive = False
     
     tower = pygame.sprite.GroupSingle()
     tower.add(makeTower())
@@ -152,7 +154,7 @@ def main():
     testFont = pygame.font.Font(None, 50)
     titleFont = pygame.font.Font(None, 100)
     
-    gameMessage = testFont.render("Press space to revive", False, "black")
+    gameMessage = testFont.render("Press space to revive & H to Heal", False, "black")
     gameMessageRect = gameMessage.get_rect(center=(603, 600))
     
     gameMessage2 = titleFont.render("Towers and Dragons", False, "Yellow")
