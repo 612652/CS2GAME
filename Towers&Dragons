@@ -101,6 +101,10 @@ def collisionSprite(tower,obstacles):
         if pygame.key.get_pressed()[pygame.K_h]:
             tower.sprite.towerIndex -= 1
     return True
+def displayScore(font, screen,start): #<<<
+    scoreSurface = font.render(f"Score: {currentTime}", False,(64,64,64))
+    scoreRect = scoreSurface.get_rect(center = (400,50))
+    screen.blit(scoreSurface,scoreRect)   
 
 
 screenLength = 1200
@@ -154,7 +158,7 @@ def main():
     testFont = pygame.font.Font(None, 50)
     titleFont = pygame.font.Font(None, 100)
     
-    gameMessage = testFont.render("Press space to revive & H to Heal", False, "black")
+    gameMessage = testFont.render("Press space to begin & H to Heal", False, "black")
     gameMessageRect = gameMessage.get_rect(center=(603, 600))
     
     gameMessage2 = titleFont.render("Towers and Dragons", False, "Yellow")
