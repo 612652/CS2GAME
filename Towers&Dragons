@@ -8,6 +8,8 @@ from random import randint,choice
 
 scriptDir = os.path.dirname(os.path.abspath(__file__))
 
+
+
 #Class to make the tower
 class makeTower(pygame.sprite.Sprite):
     def __init__(self):
@@ -25,8 +27,10 @@ class makeTower(pygame.sprite.Sprite):
         
         self.image = self.towerBreak[self.towerIndex]
         self.rect = self.image.get_rect(midbottom =(100,500))
+    #update tower
     def update(self):
         self.image = self.towerBreak[self.towerIndex]
+
 #Class to make the cannon
 class Cannon(pygame.sprite.Sprite):
     def __init__(self):
@@ -47,7 +51,6 @@ class Cannon(pygame.sprite.Sprite):
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self,type):
         super().__init__()
-
         if type == "LandDragon":
             dragonWalk1= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon0.png")).convert_alpha()
             dragonWalk2= pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1.png")).convert_alpha()
@@ -65,56 +68,69 @@ class Obstacle(pygame.sprite.Sprite):
         
         self.image = self.frame[self.obstacleIndex]
         self.rect = self.image.get_rect(bottomright=(randint(1200, 1250), yPos))
-        
+    #animation for Obstaces
     def animationState(self):
         self.obstacleIndex+= 0.1
         if self.obstacleIndex >= len(self.frame):
             self.obstacleIndex = 0
         self.image = self.frame[int(self.obstacleIndex)]
         
-    
+    #Update image of obstacles
     def update(self):
         self.animationState() #check for animation updates
         self.rect.x -= 6 #updating x value
         self.destroy() #check to see if we need to delete objs
         self.clicked()
+    #Check if a Obstcale is clicked to kill it
     def clicked(self):
         click = pygame.mouse.get_pos()
         if pygame.mouse.get_pressed()[0]:
             if self.rect.collidepoint(click):
                 self.kill()
-    
+                return True
+    #destoy obstaclas wen it hit the tower
     def destroy(self):
         #if the rect. hits the left boundary
         #   remove the sprite
         if self.rect.x <= -100:
             self.kill()
+#For collions with obstacles and tower
 def collisionSprite(tower,obstacles):
     if pygame.sprite.spritecollide(tower.sprite, obstacles,True):
         tower.sprite.towerIndex += 1
         print("hit") 
+        #chage tower sprite when hit
         if tower.sprite.towerIndex >= 3:
             tower.sprite.towerIndex  = 0
             obstacles.empty()
             return False
     if tower.sprite.towerIndex >= 0:
+        #heal tower when hit
         if pygame.key.get_pressed()[pygame.K_h]:
             tower.sprite.towerIndex -= 1
     return True
-def displayScore(font, screen,start): #<<<
-    scoreSurface = font.render(f"Score: {currentTime}", False,(64,64,64))
-    scoreRect = scoreSurface.get_rect(center = (400,50))
-    screen.blit(scoreSurface,scoreRect)   
+# def displayScore(font, screen,start): #<<<
+#     score = 0
+#     if clicked: 
+#         score+=1
+#     scoreSurface = font.render(f"Score: {score}", False,(64,64,64))
+#     scoreRect = scoreSurface.get_rect(center = (400,50))
+#     screen.blit(scoreSurface,scoreRect)   
+#     pass
 
 
+#area of the game
 screenLength = 1200
 screenWidth = 720
+#main code
 def main():
     # pygame setup
     pygame.init()
     screen = pygame.display.set_mode((screenLength, screenWidth))
     clock = pygame.time.Clock()
-    
+
+    killScore = 0
+
     gameActive = False
     
     tower = pygame.sprite.GroupSingle()
@@ -153,8 +169,8 @@ def main():
     landPicture2 = pygame.image.load(os.path.join(scriptDir,"graphics/Land Dragon","sprite_LandDragon1.png")).convert_alpha()
     landPicture2 = pygame.transform.rotozoom(landPicture2, 0, 2)
     landPictureRect2 = landPicture2.get_rect(center = (950, 400))
-    
-    
+
+    # Texts for game
     testFont = pygame.font.Font(None, 50)
     titleFont = pygame.font.Font(None, 100)
     
@@ -172,6 +188,7 @@ def main():
                 pygame.quit()
                 exit()
             if gameActive:
+                #for random enemies
                 if event.type == obstacleTimer:
                     obstacleGroup.add(Obstacle(choice(["LandDragon","LandDragon","LandDragon","skyDragon","skyDragon"])))
                 
@@ -179,14 +196,17 @@ def main():
             else: 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     gameActive = True
-                    
                     startTime = int(pygame.time.get_ticks()/1000)
 
         if gameActive:
+
+            #killScore = displayScore(testFont,screen,startTime)
+
             #background Surfaces
             screen.blit(largeSky,(0,0))
             screen.blit(largeGround,(0,475))
             
+            #draw for main sprites
             tower.draw(screen)
             tower.update()
             
@@ -197,10 +217,9 @@ def main():
             obstacleGroup.update()
             
             gameActive = collisionSprite(tower, obstacleGroup)#<--here
-            
-        else: 
+        #End/Start screen
+        else:     
             screen.fill("darkred")
-            
             
             screen.blit(skyPicture, skyPictureRect)
             screen.blit(skyPicture2, skyPictureRect2)
